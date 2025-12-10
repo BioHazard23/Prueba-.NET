@@ -1,0 +1,388 @@
+@model TalentoPlus.Application.DTOs.EmpleadoUpdateDto
+@{
+    ViewData["Title"] = "Editar Empleado";
+    var initials = "";
+    if (!string.IsNullOrEmpty(Model.Nombres) && !string.IsNullOrEmpty(Model.Apellidos))
+    {
+        initials = $"{Model.Nombres[0]}{Model.Apellidos[0]}";
+    }
+}
+
+<style>
+    .edit-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .profile-preview {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .avatar-edit {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0 auto 1rem;
+    }
+    
+    .preview-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+    
+    .preview-role {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .preview-dept {
+        display: inline-block;
+        background: #f3f4f6;
+        color: #4b5563;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .form-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .form-header {
+        background: #f9fafb;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .form-header h5 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    .form-section {
+        padding: 1.5rem;
+    }
+    
+    .form-section + .form-section {
+        border-top: 1px solid #f3f4f6;
+    }
+    
+    .section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-label .required {
+        color: #ef4444;
+        font-weight: 400;
+    }
+    
+    .form-control, .form-select {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .form-actions {
+        background: #f9fafb;
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .btn-cancel {
+        background: white;
+        color: #6b7280;
+        border: 1px solid #e5e7eb;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-cancel:hover {
+        background: #f9fafb;
+        color: #374151;
+    }
+    
+    .btn-save {
+        background: #111827;
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-save:hover {
+        background: #1f2937;
+        color: white;
+    }
+    
+    .quick-info {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f3f4f6;
+    }
+    
+    .quick-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .quick-info-item i {
+        width: 18px;
+        color: #9ca3af;
+    }
+</style>
+
+<div class="edit-container">
+    <div class="row g-4">
+        <!-- Preview lateral -->
+        <div class="col-lg-3">
+            <div class="profile-preview">
+                <div class="avatar-edit" id="avatarPreview">
+                    @initials
+                </div>
+                <div class="preview-name" id="namePreview">@Model.Nombres @Model.Apellidos</div>
+                <div class="preview-role" id="rolePreview">Empleado</div>
+                <div class="preview-dept" id="deptPreview">-</div>
+                
+                <div class="quick-info">
+                    <div class="quick-info-item">
+                        <i class="bi bi-envelope"></i>
+                        <span id="emailPreview">@Model.Email</span>
+                    </div>
+                    <div class="quick-info-item">
+                        <i class="bi bi-telephone"></i>
+                        <span id="phonePreview">@Model.Telefono</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Formulario principal -->
+        <div class="col-lg-9">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                
+                <div class="form-card">
+                    <div class="form-header">
+                        <h5>Editar información del empleado</h5>
+                    </div>
+                    
+                    <!-- Datos Personales -->
+                    <div class="form-section">
+                        <div class="section-title">Datos Personales</div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label asp-for="Documento" class="form-label">Documento <span class="required">*</span></label>
+                                <input asp-for="Documento" class="form-control" />
+                                <span asp-validation-for="Documento" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Nombres" class="form-label">Nombres <span class="required">*</span></label>
+                                <input asp-for="Nombres" class="form-control" id="inputNombres" />
+                                <span asp-validation-for="Nombres" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Apellidos" class="form-label">Apellidos <span class="required">*</span></label>
+                                <input asp-for="Apellidos" class="form-control" id="inputApellidos" />
+                                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento <span class="required">*</span></label>
+                                <input asp-for="FechaNacimiento" type="date" class="form-control" 
+                                       value="@Model.FechaNacimiento.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Email" class="form-label">Email <span class="required">*</span></label>
+                                <input asp-for="Email" type="email" class="form-control" id="inputEmail" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Telefono" class="form-label">Teléfono <span class="required">*</span></label>
+                                <input asp-for="Telefono" class="form-control" id="inputTelefono" />
+                                <span asp-validation-for="Telefono" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Direccion" class="form-label">Dirección <span class="required">*</span></label>
+                                <input asp-for="Direccion" class="form-control" />
+                                <span asp-validation-for="Direccion" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información Laboral -->
+                    <div class="form-section">
+                        <div class="section-title">Información Laboral</div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="DepartamentoId" class="form-label">Departamento <span class="required">*</span></label>
+                                <select asp-for="DepartamentoId" asp-items="ViewBag.Departamentos" class="form-select" id="inputDepartamento"></select>
+                                <span asp-validation-for="DepartamentoId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CargoId" class="form-label">Cargo <span class="required">*</span></label>
+                                <select asp-for="CargoId" asp-items="ViewBag.Cargos" class="form-select" id="inputCargo"></select>
+                                <span asp-validation-for="CargoId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Salario" class="form-label">Salario <span class="required">*</span></label>
+                                <input asp-for="Salario" type="number" step="0.01" class="form-control" />
+                                <span asp-validation-for="Salario" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FechaIngreso" class="form-label">Fecha de Ingreso <span class="required">*</span></label>
+                                <input asp-for="FechaIngreso" type="date" class="form-control" 
+                                       value="@Model.FechaIngreso.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="FechaIngreso" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Estado" class="form-label">Estado <span class="required">*</span></label>
+                                <select asp-for="Estado" asp-items="ViewBag.Estados" class="form-select"></select>
+                                <span asp-validation-for="Estado" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="NivelEducativo" class="form-label">Nivel Educativo <span class="required">*</span></label>
+                                <select asp-for="NivelEducativo" asp-items="ViewBag.NivelesEducativos" class="form-select"></select>
+                                <span asp-validation-for="NivelEducativo" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Perfil Profesional -->
+                    <div class="form-section">
+                        <div class="section-title">Perfil Profesional</div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="PerfilProfesional" class="form-label">Descripción del perfil</label>
+                                <textarea asp-for="PerfilProfesional" class="form-control" rows="4" 
+                                          placeholder="Describe las habilidades y experiencia del empleado..."></textarea>
+                                <span asp-validation-for="PerfilProfesional" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Acciones -->
+                    <div class="form-actions">
+                        <a asp-action="Index" class="btn btn-cancel">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-save">
+                            Guardar cambios
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Actualizar preview en tiempo real
+        const inputNombres = document.getElementById('inputNombres');
+        const inputApellidos = document.getElementById('inputApellidos');
+        const inputEmail = document.getElementById('inputEmail');
+        const inputTelefono = document.getElementById('inputTelefono');
+        const inputDepartamento = document.getElementById('inputDepartamento');
+        const inputCargo = document.getElementById('inputCargo');
+        
+        const avatarPreview = document.getElementById('avatarPreview');
+        const namePreview = document.getElementById('namePreview');
+        const emailPreview = document.getElementById('emailPreview');
+        const phonePreview = document.getElementById('phonePreview');
+        const deptPreview = document.getElementById('deptPreview');
+        const rolePreview = document.getElementById('rolePreview');
+        
+        function updatePreview() {
+            const nombres = inputNombres.value || '';
+            const apellidos = inputApellidos.value || '';
+            
+            // Avatar initials
+            const initials = (nombres[0] || '') + (apellidos[0] || '');
+            avatarPreview.textContent = initials.toUpperCase();
+            
+            // Name
+            namePreview.textContent = `${nombres} ${apellidos}`.trim() || 'Nombre del empleado';
+            
+            // Email
+            emailPreview.textContent = inputEmail.value || '-';
+            
+            // Phone
+            phonePreview.textContent = inputTelefono.value || '-';
+            
+            // Department
+            const deptOption = inputDepartamento.options[inputDepartamento.selectedIndex];
+            deptPreview.textContent = deptOption ? deptOption.text : '-';
+            
+            // Role/Cargo
+            const cargoOption = inputCargo.options[inputCargo.selectedIndex];
+            rolePreview.textContent = cargoOption ? cargoOption.text : 'Empleado';
+        }
+        
+        // Event listeners
+        inputNombres.addEventListener('input', updatePreview);
+        inputApellidos.addEventListener('input', updatePreview);
+        inputEmail.addEventListener('input', updatePreview);
+        inputTelefono.addEventListener('input', updatePreview);
+        inputDepartamento.addEventListener('change', updatePreview);
+        inputCargo.addEventListener('change', updatePreview);
+        
+        // Initial update
+        updatePreview();
+    </script>
+}

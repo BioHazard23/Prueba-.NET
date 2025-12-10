@@ -1,0 +1,89 @@
+# Docker Compose - TalentoPlus S.A.S.
+# Levanta la solución completa: PostgreSQL + Web + API
+# Uso: docker compose up -d
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: talentoplusdb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-talentoadmin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-TalentoPlus2024!}
+      POSTGRES_DB: ${DB_NAME:-talentoplusdb}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - talentoplus-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U talentoadmin -d talentoplusdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: src/TalentoPlus.Web/Dockerfile
+    container_name: talentoplus-web
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=talentoplusdb;Username=talentoadmin;Password=TalentoPlus2024!
+      - JwtSettings__Secret=${JWT_SECRET:-TalentoPlus2024SuperSecretKeyMinimoTreintaDosCaracteres!}
+      - JwtSettings__Issuer=TalentoPlus
+      - JwtSettings__Audience=TalentoPlusUsers
+      - EmailSettings__SmtpHost=${SMTP_HOST:-smtp.gmail.com}
+      - EmailSettings__SmtpPort=${SMTP_PORT:-587}
+      - EmailSettings__SmtpUser=${SMTP_USER}
+      - EmailSettings__SmtpPassword=${SMTP_PASSWORD}
+      - EmailSettings__FromEmail=${SMTP_FROM}
+      - EmailSettings__FromName=TalentoPlus RRHH
+      - AISettings__Provider=${AI_PROVIDER:-Gemini}
+      - AISettings__ApiKey=${AI_API_KEY}
+    ports:
+      - "5000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - talentoplus-network
+
+  api:
+    build:
+      context: .
+      dockerfile: src/TalentoPlus.API/Dockerfile
+    container_name: talentoplus-api
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=talentoplusdb;Username=talentoadmin;Password=TalentoPlus2024!
+      - JwtSettings__Secret=${JWT_SECRET:-TalentoPlus2024SuperSecretKeyMinimoTreintaDosCaracteres!}
+      - JwtSettings__Issuer=TalentoPlus
+      - JwtSettings__Audience=TalentoPlusUsers
+      - JwtSettings__ExpirationMinutes=60
+      - EmailSettings__SmtpHost=${SMTP_HOST:-smtp.gmail.com}
+      - EmailSettings__SmtpPort=${SMTP_PORT:-587}
+      - EmailSettings__SmtpUser=${SMTP_USER}
+      - EmailSettings__SmtpPassword=${SMTP_PASSWORD}
+      - EmailSettings__FromEmail=${SMTP_FROM}
+      - EmailSettings__FromName=TalentoPlus RRHH
+    ports:
+      - "5001:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - talentoplus-network
+
+volumes:
+  postgres_data:
+
+networks:
+  talentoplus-network:
+    driver: bridge
+

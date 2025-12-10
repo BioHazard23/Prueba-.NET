@@ -1,0 +1,121 @@
+@model TalentoPlus.Application.DTOs.LoginDto
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_Layout";
+}
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .login-card {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        padding: 50px;
+        width: 100%;
+        max-width: 420px;
+    }
+    
+    .login-card .brand {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .login-card .brand h2 {
+        font-weight: 700;
+        color: #1f2937;
+    }
+    
+    .login-card .brand span {
+        color: #667eea;
+    }
+    
+    .form-floating {
+        margin-bottom: 20px;
+    }
+    
+    .form-control {
+        border-radius: 10px;
+        padding: 15px;
+        height: auto;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+    
+    .btn-login {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+    }
+    
+    .register-link a {
+        color: #667eea;
+        font-weight: 500;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="brand">
+            <h2><span>Talento</span>Plus</h2>
+            <p class="text-muted">Sistema de Gestión de RRHH</p>
+        </div>
+        
+        <form asp-action="Login" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            
+            <div class="form-floating">
+                <input asp-for="Email" type="email" class="form-control" placeholder="correo@ejemplo.com" autofocus />
+                <label asp-for="Email"><i class="bi bi-envelope me-2"></i>Correo electrónico</label>
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            
+            <div class="form-floating">
+                <input asp-for="Password" type="password" class="form-control" placeholder="Contraseña" />
+                <label asp-for="Password"><i class="bi bi-lock me-2"></i>Contraseña</label>
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+            
+            <div class="form-check mb-4">
+                <input asp-for="RememberMe" class="form-check-input" />
+                <label asp-for="RememberMe" class="form-check-label">Recordarme</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+            </button>
+        </form>
+        
+        <div class="register-link">
+            <p class="text-muted mb-0">¿Primera vez? <a asp-action="Register">Registrar Administrador</a></p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

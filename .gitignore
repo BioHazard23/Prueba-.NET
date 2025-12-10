@@ -1,0 +1,39 @@
+# .NET
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Archivos de publicación
+publish/
+
+# Secretos y configuración local
+.env
+appsettings.Development.json
+appsettings.Local.json
+
+# Logs
+*.log
+logs/
+
+# Datos temporales
+*.tmp
+*.temp
+
+# macOS
+.DS_Store
+
+# Thumbnails
+Thumbs.db
+
+# Python (temporal)
+.venv/
+__pycache__/
+

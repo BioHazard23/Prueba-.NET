@@ -1,0 +1,332 @@
+@{
+    ViewData["Title"] = "Importar Empleados";
+}
+
+<style>
+    .import-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .upload-zone {
+        border: 2px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 3rem 2rem;
+        text-align: center;
+        background: #fafafa;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .upload-zone:hover {
+        border-color: #6366f1;
+        background: #f5f5ff;
+    }
+    
+    .upload-zone.dragover {
+        border-color: #6366f1;
+        background: #eef2ff;
+    }
+    
+    .upload-icon {
+        width: 64px;
+        height: 64px;
+        background: #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: #6b7280;
+        font-size: 1.5rem;
+    }
+    
+    .upload-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .upload-subtitle {
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
+    
+    .file-input {
+        display: none;
+    }
+    
+    .selected-file {
+        display: none;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        color: #166534;
+    }
+    
+    .selected-file.show {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+    }
+    
+    .instructions-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+    
+    .column-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .column-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #4b5563;
+        padding: 0.4rem 0;
+    }
+    
+    .column-number {
+        width: 22px;
+        height: 22px;
+        background: #e5e7eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #6b7280;
+        flex-shrink: 0;
+    }
+    
+    .reference-section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 1.25rem;
+    }
+    
+    .reference-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .tag {
+        background: #f3f4f6;
+        color: #4b5563;
+        padding: 0.35rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .btn-import {
+        background: #111827;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .btn-import:hover {
+        background: #1f2937;
+        color: white;
+    }
+    
+    .btn-back {
+        background: transparent;
+        color: #6b7280;
+        border: 1px solid #e5e7eb;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .btn-back:hover {
+        background: #f9fafb;
+        color: #374151;
+    }
+    
+    .alert-warning-custom {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #92400e;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<div class="import-container">
+    @if (TempData["Warning"] != null)
+    {
+        <div class="alert-warning-custom">
+            <strong>Importación con advertencias</strong>
+            <div class="mt-2 small">@Html.Raw(TempData["Warning"])</div>
+        </div>
+    }
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data" id="importForm">
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('archivo').click()">
+            <div class="upload-icon">
+                <i class="bi bi-file-earmark-arrow-up"></i>
+            </div>
+            <div class="upload-title">Selecciona un archivo Excel</div>
+            <div class="upload-subtitle">o arrastra y suelta aquí</div>
+            <div class="upload-subtitle mt-2" style="font-size: 0.8rem;">.xlsx, .xls</div>
+        </div>
+        
+        <input type="file" class="file-input" id="archivo" name="archivo" accept=".xlsx,.xls" required />
+        
+        <div class="selected-file" id="selectedFile">
+            <span id="fileName"></span>
+            <button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="clearFile()">Eliminar</button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions-card mt-4">
+            <div class="section-title">Formato requerido</div>
+            <p class="small text-muted mb-3">El archivo debe contener las siguientes columnas en orden:</p>
+            <ul class="column-list">
+                <li class="column-item"><span class="column-number">1</span> Documento</li>
+                <li class="column-item"><span class="column-number">2</span> Nombres</li>
+                <li class="column-item"><span class="column-number">3</span> Apellidos</li>
+                <li class="column-item"><span class="column-number">4</span> FechaNacimiento</li>
+                <li class="column-item"><span class="column-number">5</span> Direccion</li>
+                <li class="column-item"><span class="column-number">6</span> Telefono</li>
+                <li class="column-item"><span class="column-number">7</span> Email</li>
+                <li class="column-item"><span class="column-number">8</span> Cargo</li>
+                <li class="column-item"><span class="column-number">9</span> Salario</li>
+                <li class="column-item"><span class="column-number">10</span> FechaIngreso</li>
+                <li class="column-item"><span class="column-number">11</span> Estado</li>
+                <li class="column-item"><span class="column-number">12</span> NivelEducativo</li>
+                <li class="column-item"><span class="column-number">13</span> PerfilProfesional</li>
+                <li class="column-item"><span class="column-number">14</span> Departamento</li>
+            </ul>
+        </div>
+
+        <!-- Reference Values -->
+        <div class="row mt-4 g-3">
+            <div class="col-md-6">
+                <div class="reference-section h-100">
+                    <div class="reference-title">Departamentos válidos</div>
+                    <div class="tag-list">
+                        <span class="tag">Contabilidad</span>
+                        <span class="tag">Logística</span>
+                        <span class="tag">Marketing</span>
+                        <span class="tag">Operaciones</span>
+                        <span class="tag">Recursos Humanos</span>
+                        <span class="tag">Tecnología</span>
+                        <span class="tag">Ventas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="reference-section h-100">
+                    <div class="reference-title">Cargos válidos</div>
+                    <div class="tag-list">
+                        <span class="tag">Administrador</span>
+                        <span class="tag">Analista</span>
+                        <span class="tag">Auxiliar</span>
+                        <span class="tag">Coordinador</span>
+                        <span class="tag">Desarrollador</span>
+                        <span class="tag">Ingeniero</span>
+                        <span class="tag">Soporte Técnico</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+            <a asp-controller="Dashboard" asp-action="Index" class="btn btn-back">
+                Volver
+            </a>
+            <button type="submit" class="btn btn-import">
+                Importar empleados
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('archivo');
+    const selectedFile = document.getElementById('selectedFile');
+    const fileName = document.getElementById('fileName');
+
+    // Drag and drop
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            showSelectedFile(files[0].name);
+        }
+    });
+
+    // File input change
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            showSelectedFile(fileInput.files[0].name);
+        }
+    });
+
+    function showSelectedFile(name) {
+        fileName.textContent = name;
+        selectedFile.classList.add('show');
+        uploadZone.style.display = 'none';
+    }
+
+    function clearFile() {
+        fileInput.value = '';
+        selectedFile.classList.remove('show');
+        uploadZone.style.display = 'block';
+    }
+</script>
+}

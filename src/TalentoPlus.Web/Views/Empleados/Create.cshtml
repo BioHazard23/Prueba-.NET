@@ -1,0 +1,520 @@
+@model TalentoPlus.Application.DTOs.EmpleadoCreateDto
+@{
+    ViewData["Title"] = "Nuevo Empleado";
+}
+
+<style>
+    .create-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .profile-preview {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        position: sticky;
+        top: 100px;
+    }
+    
+    .avatar-preview {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0 auto 1rem;
+        transition: background 0.3s ease;
+    }
+    
+    .avatar-preview.has-data {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    
+    .preview-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 0.25rem;
+    }
+    
+    .preview-name.placeholder {
+        color: #9ca3af;
+    }
+    
+    .preview-role {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .preview-dept {
+        display: inline-block;
+        background: #f3f4f6;
+        color: #4b5563;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .form-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .form-header {
+        background: #f9fafb;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .form-header h5 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    .form-header p {
+        margin: 0.5rem 0 0 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+    
+    .form-section {
+        padding: 1.5rem;
+    }
+    
+    .form-section + .form-section {
+        border-top: 1px solid #f3f4f6;
+    }
+    
+    .section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #9ca3af;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-label .required {
+        color: #ef4444;
+        font-weight: 400;
+    }
+    
+    .form-control, .form-select {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+    
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
+    
+    .form-actions {
+        background: #f9fafb;
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .btn-cancel {
+        background: white;
+        color: #6b7280;
+        border: 1px solid #e5e7eb;
+        padding: 0.625rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-cancel:hover {
+        background: #f9fafb;
+        color: #374151;
+    }
+    
+    .btn-save {
+        background: #111827;
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+    
+    .btn-save:hover {
+        background: #1f2937;
+        color: white;
+    }
+    
+    .quick-info {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f3f4f6;
+    }
+    
+    .quick-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+    
+    .quick-info-item.has-value {
+        color: #6b7280;
+    }
+    
+    .quick-info-item i {
+        width: 18px;
+        color: #9ca3af;
+    }
+    
+    .step-indicator {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .step {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        border-radius: 2px;
+        transition: background 0.3s;
+    }
+    
+    .step.active {
+        background: #6366f1;
+    }
+    
+    .completion-text {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<div class="create-container">
+    <div class="row g-4">
+        <!-- Preview lateral -->
+        <div class="col-lg-3">
+            <div class="profile-preview">
+                <div class="avatar-preview" id="avatarPreview">
+                    <i class="bi bi-person"></i>
+                </div>
+                <div class="preview-name placeholder" id="namePreview">Nombre del empleado</div>
+                <div class="preview-role" id="rolePreview">-</div>
+                <div class="preview-dept" id="deptPreview">-</div>
+                
+                <div class="quick-info">
+                    <div class="quick-info-item" id="emailContainer">
+                        <i class="bi bi-envelope"></i>
+                        <span id="emailPreview">-</span>
+                    </div>
+                    <div class="quick-info-item" id="phoneContainer">
+                        <i class="bi bi-telephone"></i>
+                        <span id="phonePreview">-</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 pt-3 border-top">
+                    <div class="step-indicator">
+                        <div class="step" id="step1"></div>
+                        <div class="step" id="step2"></div>
+                        <div class="step" id="step3"></div>
+                    </div>
+                    <div class="completion-text" id="completionText">Completa los campos requeridos</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Formulario principal -->
+        <div class="col-lg-9">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                
+                <div class="form-card">
+                    <div class="form-header">
+                        <h5>Registrar nuevo empleado</h5>
+                        <p>Completa la información para agregar un nuevo miembro al equipo</p>
+                    </div>
+                    
+                    <!-- Datos Personales -->
+                    <div class="form-section">
+                        <div class="section-title">Datos Personales</div>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label asp-for="Documento" class="form-label">Documento <span class="required">*</span></label>
+                                <input asp-for="Documento" class="form-control" placeholder="Ej: 12345678" id="inputDocumento" />
+                                <span asp-validation-for="Documento" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Nombres" class="form-label">Nombres <span class="required">*</span></label>
+                                <input asp-for="Nombres" class="form-control" placeholder="Ej: Juan Carlos" id="inputNombres" />
+                                <span asp-validation-for="Nombres" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Apellidos" class="form-label">Apellidos <span class="required">*</span></label>
+                                <input asp-for="Apellidos" class="form-control" placeholder="Ej: García López" id="inputApellidos" />
+                                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FechaNacimiento" class="form-label">Fecha de Nacimiento <span class="required">*</span></label>
+                                <input asp-for="FechaNacimiento" type="date" class="form-control" id="inputFechaNac" />
+                                <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Email" class="form-label">Email <span class="required">*</span></label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="correo@ejemplo.com" id="inputEmail" />
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Telefono" class="form-label">Teléfono <span class="required">*</span></label>
+                                <input asp-for="Telefono" class="form-control" placeholder="Ej: 3001234567" id="inputTelefono" />
+                                <span asp-validation-for="Telefono" class="text-danger small"></span>
+                            </div>
+                            <div class="col-12">
+                                <label asp-for="Direccion" class="form-label">Dirección <span class="required">*</span></label>
+                                <input asp-for="Direccion" class="form-control" placeholder="Ej: Calle 123 #45-67, Ciudad" id="inputDireccion" />
+                                <span asp-validation-for="Direccion" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información Laboral -->
+                    <div class="form-section">
+                        <div class="section-title">Información Laboral</div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="DepartamentoId" class="form-label">Departamento <span class="required">*</span></label>
+                                <select asp-for="DepartamentoId" asp-items="ViewBag.Departamentos" class="form-select" id="inputDepartamento">
+                                    <option value="">Selecciona un departamento</option>
+                                </select>
+                                <span asp-validation-for="DepartamentoId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CargoId" class="form-label">Cargo <span class="required">*</span></label>
+                                <select asp-for="CargoId" asp-items="ViewBag.Cargos" class="form-select" id="inputCargo">
+                                    <option value="">Selecciona un cargo</option>
+                                </select>
+                                <span asp-validation-for="CargoId" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Salario" class="form-label">Salario <span class="required">*</span></label>
+                                <input asp-for="Salario" type="number" step="0.01" class="form-control" placeholder="Ej: 3500000" id="inputSalario" />
+                                <span asp-validation-for="Salario" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="FechaIngreso" class="form-label">Fecha de Ingreso <span class="required">*</span></label>
+                                <input asp-for="FechaIngreso" type="date" class="form-control" id="inputFechaIngreso" />
+                                <span asp-validation-for="FechaIngreso" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="Estado" class="form-label">Estado <span class="required">*</span></label>
+                                <select asp-for="Estado" asp-items="ViewBag.Estados" class="form-select" id="inputEstado"></select>
+                                <span asp-validation-for="Estado" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="NivelEducativo" class="form-label">Nivel Educativo <span class="required">*</span></label>
+                                <select asp-for="NivelEducativo" asp-items="ViewBag.NivelesEducativos" class="form-select" id="inputNivelEducativo"></select>
+                                <span asp-validation-for="NivelEducativo" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Perfil Profesional -->
+                    <div class="form-section">
+                        <div class="section-title">Perfil Profesional</div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="PerfilProfesional" class="form-label">Descripción del perfil</label>
+                                <textarea asp-for="PerfilProfesional" class="form-control" rows="4" 
+                                          placeholder="Describe las habilidades, experiencia y competencias del empleado..." id="inputPerfil"></textarea>
+                                <span asp-validation-for="PerfilProfesional" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Acciones -->
+                    <div class="form-actions">
+                        <a asp-action="Index" class="btn btn-cancel">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-save">
+                            Crear empleado
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Elementos del formulario
+        const inputNombres = document.getElementById('inputNombres');
+        const inputApellidos = document.getElementById('inputApellidos');
+        const inputEmail = document.getElementById('inputEmail');
+        const inputTelefono = document.getElementById('inputTelefono');
+        const inputDepartamento = document.getElementById('inputDepartamento');
+        const inputCargo = document.getElementById('inputCargo');
+        const inputDocumento = document.getElementById('inputDocumento');
+        const inputFechaNac = document.getElementById('inputFechaNac');
+        const inputDireccion = document.getElementById('inputDireccion');
+        const inputSalario = document.getElementById('inputSalario');
+        const inputFechaIngreso = document.getElementById('inputFechaIngreso');
+        
+        // Elementos del preview
+        const avatarPreview = document.getElementById('avatarPreview');
+        const namePreview = document.getElementById('namePreview');
+        const emailPreview = document.getElementById('emailPreview');
+        const phonePreview = document.getElementById('phonePreview');
+        const deptPreview = document.getElementById('deptPreview');
+        const rolePreview = document.getElementById('rolePreview');
+        const emailContainer = document.getElementById('emailContainer');
+        const phoneContainer = document.getElementById('phoneContainer');
+        
+        // Steps
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        const completionText = document.getElementById('completionText');
+        
+        function updatePreview() {
+            const nombres = inputNombres.value || '';
+            const apellidos = inputApellidos.value || '';
+            
+            // Avatar initials
+            if (nombres || apellidos) {
+                const initials = (nombres[0] || '') + (apellidos[0] || '');
+                avatarPreview.textContent = initials.toUpperCase();
+                avatarPreview.innerHTML = initials.toUpperCase();
+                avatarPreview.classList.add('has-data');
+            } else {
+                avatarPreview.innerHTML = '<i class="bi bi-person"></i>';
+                avatarPreview.classList.remove('has-data');
+            }
+            
+            // Name
+            const fullName = `${nombres} ${apellidos}`.trim();
+            if (fullName) {
+                namePreview.textContent = fullName;
+                namePreview.classList.remove('placeholder');
+            } else {
+                namePreview.textContent = 'Nombre del empleado';
+                namePreview.classList.add('placeholder');
+            }
+            
+            // Email
+            if (inputEmail.value) {
+                emailPreview.textContent = inputEmail.value;
+                emailContainer.classList.add('has-value');
+            } else {
+                emailPreview.textContent = '-';
+                emailContainer.classList.remove('has-value');
+            }
+            
+            // Phone
+            if (inputTelefono.value) {
+                phonePreview.textContent = inputTelefono.value;
+                phoneContainer.classList.add('has-value');
+            } else {
+                phonePreview.textContent = '-';
+                phoneContainer.classList.remove('has-value');
+            }
+            
+            // Department
+            const deptOption = inputDepartamento.options[inputDepartamento.selectedIndex];
+            deptPreview.textContent = (deptOption && deptOption.value) ? deptOption.text : '-';
+            
+            // Role/Cargo
+            const cargoOption = inputCargo.options[inputCargo.selectedIndex];
+            rolePreview.textContent = (cargoOption && cargoOption.value) ? cargoOption.text : '-';
+            
+            // Update progress
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            // Section 1: Personal data
+            const personalFields = [inputDocumento, inputNombres, inputApellidos, inputFechaNac, inputEmail, inputTelefono, inputDireccion];
+            const personalFilled = personalFields.filter(f => f.value.trim() !== '').length;
+            const personalComplete = personalFilled === personalFields.length;
+            
+            // Section 2: Labor info
+            const laborFields = [inputDepartamento, inputCargo, inputSalario, inputFechaIngreso];
+            const laborFilled = laborFields.filter(f => f.value.trim() !== '').length;
+            const laborComplete = laborFilled === laborFields.length;
+            
+            // Section 3: Profile (optional, so always complete if others are)
+            const profileComplete = personalComplete && laborComplete;
+            
+            // Update steps
+            step1.classList.toggle('active', personalComplete);
+            step2.classList.toggle('active', laborComplete);
+            step3.classList.toggle('active', profileComplete);
+            
+            // Update text
+            const totalRequired = personalFields.length + laborFields.length;
+            const totalFilled = personalFilled + laborFilled;
+            const percentage = Math.round((totalFilled / totalRequired) * 100);
+            
+            if (percentage === 100) {
+                completionText.textContent = 'Listo para guardar';
+                completionText.style.color = '#10b981';
+            } else {
+                completionText.textContent = `${percentage}% completado`;
+                completionText.style.color = '#9ca3af';
+            }
+        }
+        
+        // Event listeners
+        const allInputs = [inputNombres, inputApellidos, inputEmail, inputTelefono, inputDepartamento, inputCargo, 
+                          inputDocumento, inputFechaNac, inputDireccion, inputSalario, inputFechaIngreso];
+        
+        allInputs.forEach(input => {
+            if (input) {
+                input.addEventListener('input', updatePreview);
+                input.addEventListener('change', updatePreview);
+            }
+        });
+        
+        // Initial update
+        updatePreview();
+    </script>
+}

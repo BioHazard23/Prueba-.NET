@@ -1,0 +1,61 @@
+@model TalentoPlus.Application.DTOs.EmpleadoDto
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Eliminación</h5>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="rounded-circle bg-danger bg-opacity-10 text-danger d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 80px; height: 80px; font-size: 2rem;">
+                    <i class="bi bi-trash"></i>
+                </div>
+                
+                <h5>¿Está seguro de eliminar este empleado?</h5>
+                
+                <div class="bg-light rounded p-4 my-4 text-start">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="small text-muted">Documento</label>
+                            <p class="mb-2"><strong>@Model.Documento</strong></p>
+                        </div>
+                        <div class="col-6">
+                            <label class="small text-muted">Nombre Completo</label>
+                            <p class="mb-2"><strong>@Model.NombreCompleto</strong></p>
+                        </div>
+                        <div class="col-6">
+                            <label class="small text-muted">Email</label>
+                            <p class="mb-2"><strong>@Model.Email</strong></p>
+                        </div>
+                        <div class="col-6">
+                            <label class="small text-muted">Departamento</label>
+                            <p class="mb-0"><strong>@Model.DepartamentoNombre</strong></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-muted mb-4">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Esta acción no se puede deshacer.
+                </p>
+                
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-lg me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="bi bi-trash me-1"></i>Sí, Eliminar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

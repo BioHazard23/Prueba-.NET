@@ -115,16 +115,29 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Aplicar migraciones automáticamente
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    var services = scope.ServiceProvider;
+    try
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TalentoPlus API v1");
-        c.RoutePrefix = string.Empty; // Swagger en la raíz
-    });
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error al aplicar migraciones");
+    }
 }
+
+// Habilitar Swagger siempre (desarrollo y producción)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TalentoPlus API v1");
+    c.RoutePrefix = string.Empty; // Swagger en la raíz
+});
 
 app.UseCors("AllowAll");
 

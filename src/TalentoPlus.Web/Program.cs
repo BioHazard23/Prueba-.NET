@@ -68,6 +68,33 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+// Aplicar migraciones automáticamente y crear datos iniciales
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        context.Database.Migrate();
+        
+        // Crear rol de Administrador si no existe
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        if (!await roleManager.RoleExistsAsync("Administrador"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Administrador"));
+        }
+        if (!await roleManager.RoleExistsAsync("Empleado"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Empleado"));
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Error al aplicar migraciones o crear datos iniciales");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

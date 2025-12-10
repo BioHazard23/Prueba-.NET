@@ -4,7 +4,7 @@ Sistema integral para la administración de recursos humanos desarrollado con AS
 
 **Repositorio:** https://github.com/BioHazard23/Prueba-.NET
 
-**Link Drive Archivo Comprimido:** https://drive.google.com/file/d/1nEcMH0ePoqh-fFB9ALlpq9wuUR6VY4-m/view?usp=sharing
+**Link Drive Archivo Comprimido:** https://drive.google.com/drive/folders/14aHUE-rQCYodQSYVepCMLp-HG5JjPhTG?usp=sharing
 
 ---
 

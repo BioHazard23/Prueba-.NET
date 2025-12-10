@@ -71,7 +71,7 @@ TalentoPlus/
 Este método levanta toda la solución (base de datos, aplicación web y API) en contenedores.
 
 ```bash
-#Si docker esta apagado ejecuta el siguiente comando para iniciarlo
+# Si docker esta apagado ejecuta el siguiente comando para iniciarlo
 sudo -S systemctl start docker
 
 # Clonar el repositorio
